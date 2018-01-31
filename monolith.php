@@ -6,7 +6,7 @@
  * A collection of functions and classes intended to make PHP and WordPress
  * development slightly less painful.
  *
- * @version 0.1
+ * @version 0.2
  */
 
 // Include classes

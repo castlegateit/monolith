@@ -83,7 +83,7 @@ class Video
      */
     private function importVimeoVideo($url)
     {
-        $this->id = (int) preg_replace('/.*\/(\w+)/', '$1', $url);
+        $this->id = preg_replace('/.*\/(\w+)/', '$1', $url);
         $this->url = '//player.vimeo.com/video/' . $this->id;
         $this->embed = $this->url;
 
@@ -103,7 +103,23 @@ class Video
      */
     private function importYouTubeVideo($url)
     {
-        $this->id = (int) preg_replace('/.*[\/=](\w+)/', '$1', $url);
+        $parts = parse_url($url);
+
+        if ($parts['path'] == '/watch') {
+            parse_str($parts['query'], $vars);
+            $this->id = $vars['v'];
+        } else {
+            $segments = explode('/', trim($parts['path'], '/'));
+
+            if ($segments[0] == 'embed') {
+                $this->id = $segments[1];
+            }
+        }
+
+        if (!$this->id) {
+            return;
+        }
+
         $this->url = '//www.youtube.com/watch?v=' . $this->id;
         $this->embed = '//www.youtube.com/embed/' . $this->id;
         $this->image = '//i.ytimg.com/vi/' . $this->id . '/hqdefault.jpg';
