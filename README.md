@@ -36,7 +36,7 @@ The Core module can be used with any PHP project and uses the `\Cgit\Monolith\Co
 
 ### Classes
 
-### ScalableVectorGraphic
+#### ScalableVectorGraphic
 
 The `ScalableVectorGraphic` class sanitizes SVG code for embedding directly in HTML documents. By default, it removes the XML declaration and attempts to add a `viewBox` attribute if one is not already present.
 
