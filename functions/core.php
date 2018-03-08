@@ -305,28 +305,14 @@ function formatAttributes($attributes)
  */
 function embedSvg($file, $no_frills = false)
 {
-    $unique_id = bin2hex(openssl_random_pseudo_bytes(32));
-    $svg = file_get_contents($file);
+    $svg = new ScalableVectorGraphic;
+    $svg->load($file);
 
-    // Remove completely unnecessary bits and prefix potentially important IDs
-    // with a (hopefully) unique value.
-    $replacements = [
-        ['/<\?xml .*?\?>/', ''],
-        ['/<!DOCTYPE .*?>/', ''],
-        ['/(id=(["\']).*?)(\2)/', '\1_' . $unique_id . '\2'],
-        ['/(url\((["\']?)#.*?)(\2\))/', '\1_' . $unique_id . '\2'],
-    ];
-
-    // Remove fill values so we can use CSS instead?
     if ($no_frills) {
-        $replacements[] = ['/ ?fill=(["\']).*?\1/', ''];
+        $svg->removeStyles('fill');
     }
 
-    foreach ($replacements as $replacement) {
-        $svg = preg_replace($replacement[0], $replacement[1], $svg);
-    }
-
-    return trim($svg);
+    return $svg->embed();
 }
 
 /**

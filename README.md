@@ -30,11 +30,32 @@ The Core module can be used with any PHP project and uses the `\Cgit\Monolith\Co
 
 *   `formatAttributes($attributes)` Converts an associative array into a string containing HTML attributes. Nested arrays are converted into space-separated lists.
 
-*   `embedSvg($file, $no_frills = false)` Return the contents of an SVG file stripped of anything that might cause problems when it is embedded in an HTML file.
+*   `embedSvg($file, $no_frills = false)` Return the contents of an SVG file stripped of anything that might cause problems when it is embedded in an HTML file. This function uses the `ScalableVectorGraphic` class described below.
 
 *   `twitterName($url)` Extract and return a Twitter handle from a valid Twitter URL.
 
 ### Classes
+
+### ScalableVectorGraphic
+
+The `ScalableVectorGraphic` class sanitizes SVG code for embedding directly in HTML documents. By default, it removes the XML declaration and attempts to add a `viewBox` attribute if one is not already present.
+
+~~~ php
+$svg = new \Cgit\Monolith\Core\ScalableVectorGraphic;
+$svg->parse($code); // import SVG code from string
+$svg->load($file); // import SVG code from file
+~~~
+
+You can also use it to remove attributes from the root element and to remove styles from the entire SVG. This may be useful for SVG icons where the fill colour should be set by the document CSS and not the CSS embedded in the SVG code.
+
+~~~ php
+$svg->removeAttributes('viewBox');
+$svg->removeAttributes(['width', 'height']);
+$svg->removeStyles('fill');
+$svg->removeStyles(['fill', 'stroke']);
+~~~
+
+You can reset the SVG to its original condition using the `reset()` method. You can also return the original source code and the non-sanitized, parsed SVG code using the `embedSourceCode()` and `embedSourceDom()` methods respectively.
 
 #### TimeSpanner
 
