@@ -50,6 +50,16 @@ class ScalableVectorGraphic
     private $root;
 
     /**
+     * Number of SVG instances
+     *
+     * This counter is incremented with each instance of this class, providing a
+     * unique suffix for class and ID attributes.
+     *
+     * @var integer
+     */
+    private static $instances = 0;
+
+    /**
      * Constructor
      *
      * @return void
@@ -58,6 +68,8 @@ class ScalableVectorGraphic
     {
         $this->sourceDom = new DOMDocument;
         $this->dom = new DOMDocument;
+
+        self::$instances = self::$instances + 1;
     }
 
     /**
@@ -151,14 +163,14 @@ class ScalableVectorGraphic
     /**
      * Make ID and class attributes unique
      *
-     * Add a long and (probably) unique suffix to each ID and class to prevent
-     * duplicates appearing in the parent HTML document.
+     * Add a unique suffix to each ID and class to prevent duplicates appearing
+     * in the parent HTML document.
      *
      * @return void
      */
     private function sanitizeAttributes()
     {
-        $suffix = '_' . bin2hex(openssl_random_pseudo_bytes(32));
+        $suffix = '_' . md5($this->source . self::$instances);
 
         foreach ($this->elements as $element) {
             $this->modifyAttributes($element, $suffix);
@@ -228,8 +240,19 @@ class ScalableVectorGraphic
             return;
         }
 
-        $element->nodeValue = preg_replace('/([\.#][^\s]+?)(\s*?[\{\,])/',
-            '\1' . $suffix . '\2', $element->nodeValue);
+        $value = $element->nodeValue;
+        $replace = '\1' . $suffix . '\2';
+
+        $patterns = [
+            '/([\.#][^\s]+?)(\s*?[\{\,])/', // id (#) and class (.) selectors
+            '/(\[[^\s]+?)([\]=~|^$*])/', // square bracket selectors
+        ];
+
+        foreach ($patterns as $pattern) {
+            $value = preg_replace($pattern, $replace, $value);
+        }
+
+        $element->nodeValue = $value;
     }
 
     /**
