@@ -6,18 +6,17 @@
  * A collection of functions and classes intended to make PHP and WordPress
  * development slightly less painful.
  *
- * @version 0.4
+ * @version 0.4.1
  */
 
-// Do not load Monolith more than once
-if (function_exists('Cgit\Monolith\Core\contains')) {
+if (defined('CGIT_MONOLITH_LOADED')) {
     return;
 }
 
-// Include classes
 require_once __DIR__ . '/classes/autoload.php';
 
-// Includes functions
 foreach (glob(__DIR__ . '/functions/*.php') as $file) {
     require_once $file;
 }
+
+define('CGIT_MONOLITH_LOADED', true);

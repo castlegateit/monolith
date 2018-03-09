@@ -44,6 +44,8 @@ The `ScalableVectorGraphic` class sanitizes SVG code for embedding directly in H
 $svg = new \Cgit\Monolith\Core\ScalableVectorGraphic;
 $svg->parse($code); // import SVG code from string
 $svg->load($file); // import SVG code from file
+
+echo $svg->embed(); // return sanitized SVG code
 ~~~
 
 You can also use it to remove attributes from the root element and to remove styles from the entire SVG. This may be useful for SVG icons where the fill colour should be set by the document CSS and not the CSS embedded in the SVG code.
