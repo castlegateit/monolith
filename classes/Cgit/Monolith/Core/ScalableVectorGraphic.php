@@ -228,7 +228,7 @@ class ScalableVectorGraphic
             return;
         }
 
-        $element->nodeValue = preg_replace('/(\.[^\s]+?)(\s*?[\{\,])/',
+        $element->nodeValue = preg_replace('/([\.#][^\s]+?)(\s*?[\{\,])/',
             '\1' . $suffix . '\2', $element->nodeValue);
     }
 
