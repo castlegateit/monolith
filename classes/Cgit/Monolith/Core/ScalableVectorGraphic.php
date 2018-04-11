@@ -320,6 +320,38 @@ class ScalableVectorGraphic
     }
 
     /**
+     * Set the SVG title
+     *
+     * @return self
+     */
+    public function title($text)
+    {
+        $root = $this->dom->documentElement;
+        $nodes = $root->childNodes;
+        $title = null;
+
+        // Find an existing top-level title element if one exists
+        foreach ($nodes as $node) {
+            if ($node->tagName != 'title') {
+                continue;
+            }
+
+            $title = $node;
+            break;
+        }
+
+        // Add a top-level title element if it does not already exist
+        if (is_null($title)) {
+            $title = $this->dom->createElement('title');
+            $root->insertBefore($title, $root->firstChild);
+        }
+
+        $title->nodeValue = $text;
+
+        return $this;
+    }
+
+    /**
      * Return unmodified source code
      *
      * @return string
