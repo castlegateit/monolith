@@ -58,7 +58,7 @@ class Video
      */
     private function import($code)
     {
-        $url = preg_replace('/.*?<iframe .*?src=([\'"])(.*?)\1.*/i', '$2',
+        $url = preg_replace('/.*?<iframe .*?src=([\'"])(.*?)\1.*/is', '$2',
             $code);
 
         if (!filter_var($url, FILTER_VALIDATE_URL)) {
@@ -83,15 +83,16 @@ class Video
      */
     private function importVimeoVideo($url)
     {
-        $this->id = preg_replace('/.*\/(\w+)/', '$1', $url);
-        $this->url = '//player.vimeo.com/video/' . $this->id;
+        $id = preg_replace('/.*\/(\w+)/', '$1', $url);
+        $data_url = "http://vimeo.com/api/v2/video/$id.json";
+        $data = json_decode(file_get_contents($data_url));
+
+        $this->id = $id;
+        $this->url = "//player.vimeo.com/video/$id";
         $this->embed = $this->url;
 
-        $file = file_get_contents('//vimeo.com/api/v2/video/' . $this->id
-            . '.php');
-
-        if ($file) {
-            $this->image = unserialize($file)[0]['thumbnail_large'];
+        if ($data) {
+            $this->image = $data[0]->thumbnail_large;
         }
     }
 
