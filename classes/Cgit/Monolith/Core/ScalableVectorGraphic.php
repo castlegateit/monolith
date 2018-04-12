@@ -332,7 +332,8 @@ class ScalableVectorGraphic
 
         // Find an existing top-level title element if one exists
         foreach ($nodes as $node) {
-            if ($node->tagName != 'title') {
+            if (!property_exists($node, 'tagName') ||
+                $node->tagName != 'title') {
                 continue;
             }
 
