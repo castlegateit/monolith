@@ -188,16 +188,27 @@ class ScalableVectorGraphic
      */
     private function modifyAttributes($element, $suffix)
     {
-        $names = ['class', 'id', 'xlink:href'];
+        $id = $element->getAttribute('id');
+        $class = $element->getAttribute('class');
+        $href = $element->getAttribute('xlink:href');
 
-        foreach ($names as $name) {
-            $value = $element->getAttribute($name);
+        if ($id) {
+            $element->setAttribute('id', $id . $suffix);
+        }
 
-            if (!$value || strpos($value, '#') !== false) {
-                continue;
+        if ($class) {
+            $names = explode(' ', $class);
+            $sanitized_names = [];
+
+            foreach ($names as $name) {
+                $sanitized_names[] = $name . $suffix;
             }
 
-            $element->setAttribute($name, $value . $suffix);
+            $element->setAttribute('class', implode(' ', $sanitized_names));
+        }
+
+        if ($href && strpos($href, '#') !== false) {
+            $element->setAttribute('xlink:href', $href . $suffix);
         }
     }
 
