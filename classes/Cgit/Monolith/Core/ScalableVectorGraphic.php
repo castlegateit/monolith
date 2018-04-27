@@ -193,7 +193,7 @@ class ScalableVectorGraphic
         foreach ($names as $name) {
             $value = $element->getAttribute($name);
 
-            if (!$value) {
+            if (!$value || strpos($value, '#') !== false) {
                 continue;
             }
 
