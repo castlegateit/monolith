@@ -86,6 +86,11 @@ class ScalableVectorGraphic
         $this->source = $svg;
         $this->sourceDom->loadXML($svg);
 
+        // Remove DOCTYPE, which might have been added by loadXML
+        if (!is_null($this->sourceDom->doctype)) {
+            $this->sourceDom->removeChild($this->sourceDom->doctype);
+        }
+
         return $this->reset();
     }
 
