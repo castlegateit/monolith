@@ -338,6 +338,7 @@ class ScalableVectorGraphic
     /**
      * Set the SVG title
      *
+     * @param string $text
      * @return self
      */
     public function title($text)
@@ -364,6 +365,19 @@ class ScalableVectorGraphic
         }
 
         $title->nodeValue = $text;
+
+        return $this;
+    }
+
+    /**
+     * Set the primary fill colour
+     *
+     * @param string $fill
+     * @return self
+     */
+    public function fill($fill)
+    {
+        $this->dom->documentElement->setAttribute('fill', $fill);
 
         return $this;
     }
@@ -399,5 +413,21 @@ class ScalableVectorGraphic
     public function embed()
     {
         return $this->dom->saveHTML();
+    }
+
+    /**
+     * Send complete SVG with header
+     *
+     * This will attempt to send a complete, self-contained SVG file with the
+     * correct HTTP headers. Therefore, no content should be sent before this
+     * method is called.
+     *
+     * @return void
+     */
+    public function send()
+    {
+        header('Content-Type: image/svg+xml');
+        echo $this->embed();
+        exit;
     }
 }

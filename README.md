@@ -59,6 +59,8 @@ $svg->removeStyles(['fill', 'stroke']);
 
 You can reset the SVG to its original condition using the `reset()` method. You can also return the original source code and the non-sanitized, parsed SVG code using the `embedSourceCode()` and `embedSourceDom()` methods respectively.
 
+You can use the `fill($color)` method to set a fill attribute on the root SVG element. You can also use the `title($title)` method to set a title element for better accessibility.
+
 #### TimeSpanner
 
 The `TimeSpanner` class provides a convenient way of calculating and displaying consistently formatted ranges of dates or times. Its constructor sets the start and end dates, performing some sanitization of the input (integers are assumed to be Unix time; everything else gets fed through `strtotime()`).
