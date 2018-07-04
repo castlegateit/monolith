@@ -113,6 +113,8 @@ The WordPress module uses the `\Cgit\Monolith\WordPress` namespace.
 
 *   `enqueue($file, $deps = [], $script = null, $parent = null)` Enqueues a CSS or JavaScript file with cache-busting, dependencies (based on handles), and automatic style or script detection. This function returns the automatically generated resource handle so you can use it in other dependency lists. Files can be specified by handle, relative path, absolute path, or URL.
 
+*   `labels($single, $plural = null)` Generates a complete set of labels for a [custom post type](https://developer.wordpress.org/reference/functions/register_post_type/#parameters) or [custom taxonomy](https://developer.wordpress.org/reference/functions/register_taxonomy/#parameters).
+
 *   `pagination($args = [])` Wrapper for `paginate_links()` with sensible default values.
 
 ### Classes

@@ -75,3 +75,49 @@ function pagination($args = [])
 
     return paginate_links(array_merge($defaults, $args));
 }
+
+/**
+ * Post type and taxonomy labels
+ *
+ * Generates a complete associative array of labels for a custom post type or
+ * custom taxonomy, based on single and plural names. If no plural form is
+ * provided, the plural will be created by appending "s" to the singular form.
+ *
+ * @param string $single
+ * @param string $plural
+ * @return array
+ */
+function labels($single, $plural = null)
+{
+    if (is_null($plural)) {
+        $plural = $single . 's';
+    }
+
+    return [
+        'name' => $plural,
+        'singular_name' => $single,
+        'add_new' => 'Add New',
+        'add_new_item' => 'Add New ' . $single,
+        'add_or_remove_items' => 'Add or remove ' . $plural,
+        'all_items' => 'All ' . $plural,
+        'archives' => $single . ' Archives',
+        'attributes' => $single . ' Attributes',
+        'choose_from_most_used' => 'Choose from the most used ' . $plural,
+        'edit_item' => 'Edit ' . $single,
+        'insert_into_item' => 'Insert into ' . $single,
+        'menu_name' => $plural,
+        'new_item' => 'New ' . $single,
+        'new_item_name' => 'New ' . $single . ' Name',
+        'not_found' => 'No ' . $plural . ' found',
+        'not_found_in_trash' => 'No ' . $plural . ' found in Trash',
+        'parent_item' => 'Parent ' . $single,
+        'parent_item_colon' => 'Parent ' . $single . ':',
+        'popular_items' => 'Popular ' . $plural,
+        'search_items' => 'Search ' . $plural,
+        'separate_items_with_commas' => 'Separate ' . $plural . ' with commas',
+        'update_item' => 'Update ' . $single,
+        'uploaded_to_this_item' => 'Uploaded to this ' . $single,
+        'view_item' => 'View ' . $single,
+        'view_items' => 'View ' . $plural,
+    ];
+}
