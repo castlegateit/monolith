@@ -40,6 +40,13 @@ class Video
     private $image;
 
     /**
+     * Aspect ratio (default 16:9)
+     *
+     * @var float
+     */
+    private $ratio = 0.5625;
+
+    /**
      * Constructor
      *
      * @param string $code
@@ -63,6 +70,15 @@ class Video
 
         if (!filter_var($url, FILTER_VALIDATE_URL)) {
             return;
+        }
+
+        // Attempt to find the width and height of the video so that we can
+        // calculate its aspect ratio.
+        $width = (int) preg_replace('/.*?<iframe .*?width=([\'"])(.*?)\1.*/is', '$2', $code);
+        $height = (int) preg_replace('/.*?<iframe .*?height=([\'"])(.*?)\1.*/is', '$2', $code);
+
+        if ($width && $height) {
+            $this->ratio = $height / $width;
         }
 
         if (stripos($url, 'vimeo.com') !== false) {
@@ -170,5 +186,19 @@ class Video
     {
         return '<a href="' . $this->url . '" title="' . $title . '">'
             . '<img src="' . $this->image . '" alt="' . $alt . '"></a>';
+    }
+
+    /**
+     * Return responsive video embed code
+     *
+     * @return string
+     */
+    public function responsiveEmbed()
+    {
+        $padding = rtrim(number_format($this->ratio * 100, 4), '0');
+
+        return '<div class="monolith-responsive-video" style="height: 0; padding-bottom: ' . $padding . '%; position: relative">
+            <iframe src="' . $this->embed . '" style="height: 100%; left: 0; position: absolute; top: 0; width: 100%" frameborder="0" allowfullscreen></iframe>
+        </div>';
     }
 }

@@ -103,7 +103,10 @@ $foo->url(); // video URL
 $foo->image(); // video placeholder image
 $foo->embed(); // video iframe embed code
 $foo->link(); // HTML image with link to video
+$foo->responsiveEmbed(); // iframe embed with responsive wrapper
 ~~~
+
+Note that `responsiveEmbed` needs an iframe with width and height attributes to calculate the aspect ratio of the video. Otherwise, videos are assumed to be in 16:9 format.
 
 ## WordPress
 
