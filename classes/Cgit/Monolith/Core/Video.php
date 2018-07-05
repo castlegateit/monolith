@@ -105,16 +105,20 @@ class Video
     private function importYouTubeVideo($url)
     {
         $parts = parse_url($url);
+        $path = trim($parts['path'], '/');
+        $segments = explode('/', $path);
 
-        if ($parts['path'] == '/watch') {
-            parse_str($parts['query'], $vars);
-            $this->id = $vars['v'];
-        } else {
-            $segments = explode('/', trim($parts['path'], '/'));
+        if ($parts['host'] == 'youtu.be') {
+            $this->id = $path;
+        }
 
-            if ($segments[0] == 'embed') {
-                $this->id = $segments[1];
-            }
+        elseif ($path == 'watch') {
+            parse_str($parts['query'], $args);
+            $this->id = $args['v'];
+        }
+
+        elseif (isset($segments[0]) && in_array($segments[0], ['embed', 'v'])) {
+            $this->id = $segments[1];
         }
 
         if (!$this->id) {
