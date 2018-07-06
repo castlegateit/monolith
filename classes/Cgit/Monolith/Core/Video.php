@@ -47,6 +47,13 @@ class Video
     private $ratio = 0.5625;
 
     /**
+     * Cache directory
+     *
+     * @var string
+     */
+    private static $cache;
+
+    /**
      * Constructor
      *
      * @param string $code
@@ -101,7 +108,7 @@ class Video
     {
         $id = preg_replace('/.*\/(\w+)/', '$1', $url);
         $data_url = "http://vimeo.com/api/v2/video/$id.json";
-        $data = json_decode(file_get_contents($data_url));
+        $data = json_decode(self::download($data_url));
 
         $this->id = $id;
         $this->url = "//player.vimeo.com/video/$id";
@@ -200,5 +207,42 @@ class Video
         return '<div class="monolith-responsive-video" style="height: 0; padding-bottom: ' . $padding . '%; position: relative">
             <iframe src="' . $this->embed . '" style="height: 100%; left: 0; position: absolute; top: 0; width: 100%" frameborder="0" allowfullscreen></iframe>
         </div>';
+    }
+
+    /**
+     * Set cache directory
+     *
+     * @param string $directory
+     * @return void
+     */
+    public static function cache($directory)
+    {
+        self::$cache = rtrim($directory, '/');
+    }
+
+    /**
+     * Download and maybe cache file
+     *
+     * @param string $url
+     * @param integer $limit
+     * @return string
+     */
+    private static function download($url, $limit = 3600)
+    {
+        if (is_null(self::$cache) || !is_dir(self::$cache)) {
+            return file_get_contents($url);
+        }
+
+        $file = self::$cache . '/' . preg_replace('/[^0-9a-z]+/i', '_', $url);
+        $expires = time() - $limit;
+
+        if (file_exists($file) && filemtime($file) > $expires) {
+            return file_get_contents($file);
+        }
+
+        $content = file_get_contents($url);
+        file_put_contents($file, $content);
+
+        return $content;
     }
 }
