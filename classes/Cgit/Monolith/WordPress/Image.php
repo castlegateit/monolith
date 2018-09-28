@@ -32,6 +32,13 @@ class Image
     private $defaultPostId = 0;
 
     /**
+     * Image URLs, widths, and heights
+     *
+     * @var array
+     */
+    private $sources = [];
+
+    /**
      * Constructor
      *
      * @param mixed $image
@@ -196,6 +203,9 @@ class Image
             'caption' => $obj->post_excerpt,
             'description' => apply_filters('the_content', $obj->post_content),
         ];
+
+        // Flush cached image URLs and dimensions
+        $this->sources = [];
     }
 
     /**
@@ -251,6 +261,46 @@ class Image
     }
 
     /**
+     * Return image URL, width, or height
+     *
+     * To reduce the number of database requests, this checks the list of
+     * previously queried sources before performing a new request.
+     *
+     * @param string $key
+     * @param string $size
+     * @return mixed
+     */
+    private function source($key = 'url', $size = 'full')
+    {
+        if (!$this->id) {
+            return;
+        }
+
+        if (!isset($this->sources[$size])) {
+            $keys = ['url', 'width', 'height'];
+            $values = wp_get_attachment_image_src($this->id, $size);
+
+            if (!$values) {
+                return;
+            }
+
+            $this->sources[$size] = array_combine($keys, $values);
+        }
+
+        return $this->sources[$size][$key];
+    }
+
+    /**
+     * Return image ID
+     *
+     * @return integer
+     */
+    public function id()
+    {
+        return $this->id;
+    }
+
+    /**
      * Return image URL
      *
      * @param string $size
@@ -258,11 +308,29 @@ class Image
      */
     public function url($size = 'full')
     {
-        if (!$this->id) {
-            return;
-        }
+        return $this->source('url', $size);
+    }
 
-        return wp_get_attachment_image_src($this->id, $size)[0];
+    /**
+     * Return image width
+     *
+     * @param string $size
+     * @return integer
+     */
+    public function width($size = 'full')
+    {
+        return $this->source('width', $size);
+    }
+
+    /**
+     * Return image height
+     *
+     * @param string $size
+     * @return integer
+     */
+    public function height($size = 'full')
+    {
+        return $this->source('height', $size);
     }
 
     /**
@@ -324,9 +392,11 @@ class Image
      * @param string $size
      * @param array $atts
      * @param boolean $data
+     * @param boolean $dimensions
      * @return string
      */
-    public function element($size = 'full', $atts = [], $data = false)
+    public function element($size = 'full', $atts = [], $data = false,
+        $dimensions = true)
     {
         if (!$this->id) {
             return;
@@ -343,6 +413,12 @@ class Image
 
         if (!isset($atts['alt'])) {
             $atts['alt'] = $this->meta('alt');
+        }
+
+        // Add image dimensions?
+        if ($dimensions) {
+            $atts['width'] = $this->width($size);
+            $atts['height'] = $this->height($size);
         }
 
         // Put the required image attributes at the start of the list and
