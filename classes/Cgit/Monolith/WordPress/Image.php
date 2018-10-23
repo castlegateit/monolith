@@ -284,7 +284,8 @@ class Image
                 return;
             }
 
-            $this->sources[$size] = array_combine($keys, $values);
+            $this->sources[$size] = array_combine($keys,
+                array_slice($values, 0, 3));
         }
 
         return $this->sources[$size][$key];
