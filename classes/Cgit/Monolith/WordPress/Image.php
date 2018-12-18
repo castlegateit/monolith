@@ -168,7 +168,7 @@ class Image
     private function reset()
     {
         $this->id = 0;
-        $this->meta = [];
+        $this->setImageMetaValues();
     }
 
     /**
@@ -184,6 +184,15 @@ class Image
         $file = '';
         $alt = '';
 
+        // If the image is not a valid attachment, reset the image meta values
+        // and cached data.
+        if (!$obj) {
+            $this->setImageMetaValues();
+            $this->unsetImageSources();
+
+            return;
+        }
+
         if (isset($meta['_wp_attached_file'])) {
             $file = $meta['_wp_attached_file'][0];
         }
@@ -193,7 +202,7 @@ class Image
         }
 
         // Assign the information to the instance property
-        $this->meta = [
+        $this->setImageMetaValues([
             'url' => $this->url(),
             'file_name' => basename($file),
             'file_path' => wp_upload_dir()['basedir'] . '/' . $file,
@@ -202,9 +211,45 @@ class Image
             'alt' => $alt,
             'caption' => $obj->post_excerpt,
             'description' => apply_filters('the_content', $obj->post_content),
-        ];
+        ]);
 
         // Flush cached image URLs and dimensions
+        $this->unsetImageSources();
+    }
+
+    /**
+     * Set image meta values
+     *
+     * Assign meta values to properties, removing invalid keys and inserting
+     * default values for mising keys.
+     *
+     * @param array $values
+     * @return void
+     */
+    private function setImageMetaValues($values = [])
+    {
+        $defaults = [
+            'url' => '',
+            'file_name' => '',
+            'file_path' => '',
+            'mime_type' => '',
+            'title' => '',
+            'alt' => '',
+            'caption' => '',
+            'description' => '',
+        ];
+
+        $this->meta = array_merge($defaults,
+            array_intersect_key($values, $defaults));
+    }
+
+    /**
+     * Flush cached image URLs and dimensions
+     *
+     * @return void
+     */
+    private function unsetImageSources()
+    {
         $this->sources = [];
     }
 
