@@ -156,10 +156,18 @@ class Video
     /**
      * Return video URL
      *
+     * Return the URL of the video web page or the URL used to embed the video
+     * as an iframe.
+     *
+     * @param boolean $embed
      * @return string
      */
-    public function url()
+    public function url($embed = false)
     {
+        if ($embed) {
+            return $this->embed;
+        }
+
         return $this->url;
     }
 
