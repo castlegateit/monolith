@@ -136,6 +136,8 @@ echo $foo->content();
 echo $foo->excerpt();
 ~~~
 
+It also provides the `field($field)` method, which retrieves an [Advanced Custom Fields](https://www.advancedcustomfields.com/) value from the post.
+
 #### Image
 
 Based on the original Terminus Image class, this provides a consistent interface for getting URLs. Its constructor accepts an image attachment object, an image ID, a post object, a post ID, or an ACF custom field name.

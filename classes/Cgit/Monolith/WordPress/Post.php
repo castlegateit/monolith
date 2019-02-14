@@ -280,4 +280,19 @@ class Post
     {
         return get_the_date($format, $this->post);
     }
+
+    /**
+     * Return ACF field value
+     *
+     * @param string $field
+     * @return mixed
+     */
+    public function field($field)
+    {
+        if (!function_exists('get_field')) {
+            return;
+        }
+
+        return get_field($field, $this->id);
+    }
 }
