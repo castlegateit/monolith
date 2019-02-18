@@ -300,15 +300,20 @@ function formatAttributes($attributes)
  * in an HTML document.
  *
  * @param string $file
- * @param boolean $no_frills
+ * @param string $title
+ * @param boolean $nofill
  * @return string
  */
-function embedSvg($file, $no_frills = false)
+function embedSvg($file, $title = false, $nofill = false)
 {
     $svg = new ScalableVectorGraphic;
     $svg->load($file);
 
-    if ($no_frills) {
+    if ($title) {
+        $svg->title($title);
+    }
+
+    if ($nofill) {
         $svg->removeStyles('fill');
     }
 

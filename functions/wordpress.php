@@ -121,3 +121,26 @@ function labels($single, $plural = null)
         'view_items' => 'View ' . $plural,
     ];
 }
+
+/**
+ * Return SVG file content as safe HTML element
+ *
+ * This is similar to the SVG embed function in Core, but assumes relative file
+ * paths start in the WordPress theme directory.
+ *
+ * @param string $file
+ * @param string $title
+ * @param boolean $nofill
+ */
+function embedSvg($file, $title = false, $nofill = false)
+{
+    if (!\Cgit\Monolith\Core\startsWith($file, '/')) {
+        $file = get_stylesheet_directory() . $file;
+    }
+
+    if (!\Cgit\Monolith\Core\endsWith($file, '.svg')) {
+        $file = $file . '.svg';
+    }
+
+    return \Cgit\Monolith\Core\embedSvg($file, $title, $nofill);
+}
