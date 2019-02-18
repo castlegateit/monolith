@@ -172,9 +172,10 @@ function formatUrl($url, $human = false)
  *
  * @param string $url
  * @param string $content
+ * @param array $attributes
  * @return string
  */
-function formatLink($url, $content = null)
+function formatLink($url, $content = null, $attributes = [])
 {
     $url = formatUrl($url);
 
@@ -182,7 +183,29 @@ function formatLink($url, $content = null)
         $content = formatUrl($url, true);
     }
 
-    return '<a href="' . $url . '">' . $content . '</a>';
+    $attributes['href'] = $url;
+
+    return '<a ' . formatAttributes($attributes) . '>' . $content . '</a>';
+}
+
+/**
+ * Format telephone link
+ *
+ * @param string $tel
+ * @param string $content
+ * @param array $attributes
+ * @return string
+ */
+function formatTelLink($tel, $content = null, $attributes = [])
+{
+    if (is_null($content)) {
+        $content = $tel;
+    }
+
+    $tel = preg_replace('/\(.*?\)|[^\d\+\-]/', '', $tel);
+    $attributes['href'] = 'tel:' . $tel;
+
+    return '<a ' . formatAttributes($attributes) . '>' . $content . '</a>';
 }
 
 /**

@@ -20,7 +20,9 @@ The Core module can be used with any PHP project and uses the `\Cgit\Monolith\Co
 
 *   `formatUrl($url, $human = false)` Provided with something that looks like a URL, return a predictable URL with or without its scheme.
 
-*   `formatLink($url, $content = null)` Provided with something that looks like a URL, return a valid HTML link with optional content.
+*   `formatLink($url, $content = null, $attributes = [])` Provided with something that looks like a URL, return a valid HTML link with optional content.
+
+*   `formatTelLink($tel, $content = null, $attributes = [])` Return a telephone number link.
 
 *   `ordinal($number)` Return a number with its appropriate ordinal suffix, e.g. "1st", "2nd", or "3rd".
 
