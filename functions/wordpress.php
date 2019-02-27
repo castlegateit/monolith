@@ -135,7 +135,7 @@ function labels($single, $plural = null)
 function embedSvg($file, $title = false, $nofill = false)
 {
     if (!\Cgit\Monolith\Core\startsWith($file, '/')) {
-        $file = get_stylesheet_directory() . $file;
+        $file = get_stylesheet_directory() . '/' . $file;
     }
 
     if (!\Cgit\Monolith\Core\endsWith($file, '.svg')) {
