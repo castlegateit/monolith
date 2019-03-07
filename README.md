@@ -176,6 +176,55 @@ $foo->element([
 ]);
 ~~~
 
+#### PostType
+
+The `PostType` class is an abstract class that can be extended to define custom post types with taxonomies, custom fields, and custom query parameters quickly and easily:
+
+~~~ php
+class Book extends PostType
+{
+    $this->type = 'book';
+
+    $this->args = [
+        'label' => 'Books',
+        'label_single' => 'Book',
+    ];
+
+    $this->taxons = [
+        'book-category' => [],
+        'book-tag' => [],
+    ];
+
+    $this->queryArgs = [
+        'posts_per_page' => 20,
+    ];
+
+    $this->fields = [
+        [
+            // ACF field group parameters
+        ],
+    ];
+}
+~~~
+
+##### Properties
+
+The `args` property is an array of `register_post_type` parameters, plus an optional `label_single` parameter that is used to generate a full set of labels automatically.
+
+The `taxons` property is a nested array of taxonomy parameters. The keys are the taxonomy names and the values are the arrays of parameters passed to the `register_taxonomy` function.
+
+The `queryArgs` property is an array of `WP_Query` parameters set via the `pre_get_posts` action.
+
+The `fields` property is a nested array of ACF field groups, allowing you to add multiple to the post type. The `location` parameter can be omitted and will be set the current post type automatically.
+
+##### Methods
+
+You do not need to use any methods to define a post type. However, the class does call some methods can be extended in your child class, perhaps to set the post type parameters:
+
+*   `init` is run immediately on instantiation.
+*   `preInit` is run on the `init` action before any of the plugin methods have run.
+*   `postInit` is run on the `init` action after all the plugin methods have run.
+
 #### Resource
 
 The `Resource` class does the heavy lifting for the `enqueue` function and shouldn't need to be used directly.
