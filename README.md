@@ -140,7 +140,7 @@ echo $foo->content();
 echo $foo->excerpt();
 ~~~
 
-It also provides the `field($field)` method, which retrieves an [Advanced Custom Fields](https://www.advancedcustomfields.com/) value from the post.
+It also provides the `field($field)` method, which retrieves an [Advanced Custom Fields](https://www.advancedcustomfields.com/) value from the post, and the `image()` method, which returns an `Image` instance for the post's featured image.
 
 #### Image
 

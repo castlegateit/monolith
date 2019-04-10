@@ -55,6 +55,13 @@ class Post
     private $excerpt;
 
     /**
+     * Post featured image as Image instance
+     *
+     * @var Image
+     */
+    private $image;
+
+    /**
      * Constructor
      *
      * Finds the original post object and sets the values of the post properties
@@ -294,5 +301,19 @@ class Post
         }
 
         return get_field($field, $this->id);
+    }
+
+    /**
+     * Return featured image as Image instance
+     *
+     * @return Image
+     */
+    public function image()
+    {
+        if (is_null($this->image)) {
+            $this->image = new Image($this->id);
+        }
+
+        return $this->image;
     }
 }
