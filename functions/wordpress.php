@@ -144,3 +144,60 @@ function embedSvg($file, $title = false, $nofill = false)
 
     return \Cgit\Monolith\Core\embedSvg($file, $title, $nofill);
 }
+
+/**
+ * Send 404
+ *
+ * Send a 404 response immediately and prevent any further output. If a 404
+ * template is available, this will be output instead.
+ *
+ * @return void
+ */
+function send404()
+{
+    global $wp_query;
+
+    $wp_query->set_404();
+
+    status_header(404);
+
+    $template = get_404_template();
+
+    if ($template) {
+        include $template;
+    }
+
+    exit;
+}
+
+/**
+ * Return page(s) based on template
+ *
+ * @param string $template
+ * @param boolean $multiple
+ * @return mixed
+ */
+function pageFromTemplate($template, $multiple = false)
+{
+    $pages = get_posts([
+        'post_type' => 'page',
+        'orderby' => 'menu_order',
+        'order' => 'ASC',
+        'meta_query' => [
+            [
+                'key' => '_wp_page_template',
+                'value' => $template,
+            ],
+        ],
+    ]);
+
+    if (!$pages) {
+        return null;
+    }
+
+    if ($multiple) {
+        return $pages;
+    }
+
+    return $pages[0];
+}

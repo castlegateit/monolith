@@ -6,7 +6,7 @@
  * A collection of functions and classes intended to make PHP and WordPress
  * development slightly less painful.
  *
- * @version 0.5.1
+ * @version 0.6
  */
 
 if (defined('CGIT_MONOLITH_LOADED')) {

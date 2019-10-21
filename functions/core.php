@@ -133,7 +133,7 @@ function dataUrl($file, $type = null)
  * and URL protocol separator.
  *
  * @param string $url
- * @param string $human
+ * @param boolean $human
  * @return void
  */
 function formatUrl($url, $human = false)
@@ -189,21 +189,55 @@ function formatLink($url, $content = null, $attributes = [])
 }
 
 /**
+ * Format telephone number
+ *
+ * Converts a telephone number to a machine- or human-readable format. Allows
+ * you to set the country code on machine-readable telephone numbers.
+ *
+ * @param string $tel
+ * @param boolean $human
+ * @param string $code
+ * @return string
+ */
+function formatTel($tel, $human = false, $code = null)
+{
+    if ($human) {
+        return str_replace(' ', '&nbsp;', $tel);
+    }
+
+    $tel = preg_replace('/\D/', '', html_entity_decode($tel));
+
+    if (substr($tel, 0, 1) === '0') {
+        if (is_null($code)) {
+            $code = '+44';
+        }
+
+        $tel = $code . substr($tel, 1);
+    }
+
+    return $tel;
+}
+
+/**
  * Format telephone link
+ *
+ * Creates a valid HTML telephone link with optional content, attributes, and
+ * country code. The default content is the human-readable version of the
+ * telephone number.
  *
  * @param string $tel
  * @param string $content
  * @param array $attributes
+ * @param string $code
  * @return string
  */
-function formatTelLink($tel, $content = null, $attributes = [])
+function formatTelLink($tel, $content = null, $attributes = [], $code = null)
 {
     if (is_null($content)) {
-        $content = $tel;
+        $content = formatTel($tel, true);
     }
 
-    $tel = preg_replace('/\(.*?\)|[^\d\+\-]/', '', $tel);
-    $attributes['href'] = 'tel:' . $tel;
+    $attributes['href'] = 'tel:' . formatTel($tel, false, $code);
 
     return '<a ' . formatAttributes($attributes) . '>' . $content . '</a>';
 }
@@ -356,4 +390,34 @@ function twitterName($url)
 {
     return preg_replace('~^(?:https?:)?//(?:www.)?twitter.com/'
         . '(?:#!/)?(.+?)(?:/)?$~i', '$1', $url);
+}
+
+/**
+ * Split lines
+ *
+ * Convert a string into an array using commas and line breaks as delimiters and
+ * removing leading and trailing space. Useful for parsing address data.
+ *
+ * @param string $text
+ * @return array
+ */
+function splitLines($text)
+{
+    return preg_split('/ *[,\n\r]+ */', trim($text));
+}
+
+/**
+ * Rejoin lines with new delimiter
+ *
+ * @param array|string $lines
+ * @param string $sep
+ * @return string
+ */
+function rejoinLines($lines, $sep = ', ')
+{
+    if (!is_array($lines)) {
+        $lines = splitLines($lines);
+    }
+
+    return implode($sep, $lines);
 }

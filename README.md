@@ -22,7 +22,9 @@ The Core module can be used with any PHP project and uses the `\Cgit\Monolith\Co
 
 *   `formatLink($url, $content = null, $attributes = [])` Provided with something that looks like a URL, return a valid HTML link with optional content.
 
-*   `formatTelLink($tel, $content = null, $attributes = [])` Return a telephone number link.
+*   `formatTel($tel, $human = false, $code = null)` Return a formatted telephone number.
+
+*   `formatTelLink($tel, $content = null, $attributes = [], $code = null)` Return a telephone number link.
 
 *   `ordinal($number)` Return a number with its appropriate ordinal suffix, e.g. "1st", "2nd", or "3rd".
 
@@ -35,6 +37,10 @@ The Core module can be used with any PHP project and uses the `\Cgit\Monolith\Co
 *   `embedSvg($file, $title = false, $nofill = false)` Return the contents of an SVG file stripped of anything that might cause problems when it is embedded in an HTML file. This function uses the `ScalableVectorGraphic` class described below.
 
 *   `twitterName($url)` Extract and return a Twitter handle from a valid Twitter URL.
+
+*   `splitLines($text)` Split comma- and newline-delimited text (e.g. an address) into array items.
+
+*   `rejoinLines($lines, $sep = ', ')` Rejoin lines, either as array or string parsed by `splitLines`, with new delimiter.
 
 ### Classes
 
@@ -123,6 +129,10 @@ The WordPress module uses the `\Cgit\Monolith\WordPress` namespace.
 *   `pagination($args = [])` Wrapper for `paginate_links()` with sensible default values.
 
 *   `embedSvg($file, $title, $nofill)` Similar to the function of the same name in `Core` described above, but relative file paths are assumed to be in the active theme directory.
+
+*   `send404()` Send an immediate 404 response and display the 404 template, overriding all other responses and output.
+
+*   `pageFromTemplate($template, $multiple = false)` Identify and return the page(s) that use a particular template.
 
 ### Classes
 
